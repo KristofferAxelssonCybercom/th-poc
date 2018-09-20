@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using ThomasPoC.Data.DAL;
 
 namespace ThomasPoC.Data
@@ -16,9 +17,9 @@ namespace ThomasPoC.Data
         private readonly CustomerDbContext _context = null;
         private ILogger _log = null;
 
-        public CustomerRepo(IOptions<Settings> settings, ILogger<CustomerRepo> logger)
+        public CustomerRepo(ILogger<CustomerRepo> logger, CustomerDbContext context)
         {
-            _context = new CustomerDbContext(settings);
+            _context = context;
             _log = logger;
         }
 
@@ -28,9 +29,17 @@ namespace ThomasPoC.Data
             {
                 using (var httpClient = new HttpClient())
                 {
+
+                    //Source 1.
                     string url = "https://jsonplaceholder.typicode.com/posts";
                     Task<string> response = httpClient.GetStringAsync(url);
-                    IList<Customer> customers = JsonConvert.DeserializeObject<IList<Customer>>(await response);
+                    IList<Customer> customers1 = JsonConvert.DeserializeObject<IList<Customer>>(await response);
+
+                    //Source 2.
+                    _context.Database.EnsureCreated();
+                    IList<Customer> customers2 = await _context.Customers.AsNoTracking().ToListAsync();
+
+                    IList<Customer> customers = customers1.Concat(customers2).Distinct().ToList();
 
                     return customers;
                 }

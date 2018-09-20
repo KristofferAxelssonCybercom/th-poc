@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThomasPoC", "ThomasPoC\Thom
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThomasPoC.Tests", "ThomasPoC.Tests\ThomasPoC.Tests.csproj", "{BD48E0CD-8957-4981-B16E-7378635A7282}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThomasPoC.Data", "ThomasPoC.Data\ThomasPoC.Data.csproj", "{1EDD620E-84B1-49E4-B045-8C368FCED811}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThomasPoC.Data", "ThomasPoC.Data\ThomasPoC.Data.csproj", "{1EDD620E-84B1-49E4-B045-8C368FCED811}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

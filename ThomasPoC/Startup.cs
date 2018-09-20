@@ -4,10 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Bogus;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +22,7 @@ using Microsoft.OData.Edm;
 using Swashbuckle.AspNetCore.Swagger;
 using ThomasPoC.Data;
 using ThomasPoC.Data.DAL;
+using static Microsoft.AspNetCore.Hosting.Internal.HostingApplication;
 
 namespace ThomasPoC
 {
@@ -37,6 +41,13 @@ namespace ThomasPoC
         {
             services.AddLogging();
 
+            services.AddEntityFrameworkSqlServer();
+
+            //services.AddEntityFrameworkSqlServer()
+            //    .AddDbContext<CustomerDbContext>((serviceProvider, options) =>
+            //        options.UseInMemoryDatabase("ThomasCustomers")
+            //            .UseInternalServiceProvider(serviceProvider));
+
             services.AddDbContext<CustomerDbContext>(opt => opt.UseInMemoryDatabase("ThomasCustomers"));
 
             services.AddOData();
@@ -47,6 +58,8 @@ namespace ThomasPoC
             ).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<ICustomerRepo, CustomerRepo>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddSwaggerGen(c =>
             {
@@ -105,6 +118,9 @@ namespace ThomasPoC
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            //Seed
+            //var db = new CustomerDbContext();
+            //SeedCustomers(db);
         }
 
 

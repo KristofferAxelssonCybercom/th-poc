@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bogus;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -14,20 +15,29 @@ namespace ThomasPoC.Data.DAL
 
     public class CustomerDbContext : DbContext
     {
-        //private readonly IMongoDatabase _database = null;
-
-        public CustomerDbContext(DbContextOptions<CustomerDbContext> options): base(options)
+        public CustomerDbContext()
         {
         }
 
+        //public CustomerDbContext() : base() { }
+        public CustomerDbContext(DbContextOptions<CustomerDbContext> options) : base(options) { }
+
+
         public DbSet<Customer> Customers { get; set; }
 
-        public CustomerDbContext(IOptions<Settings> settings)
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //var client = new MongoClient(settings.Value.ConnectionString);
-            //if (client != null)
-            //    _database = client.GetDatabase(settings.Value.Database);
-            //return null;
+
+            for (int i = 0; i < 200; i++)
+            {
+                modelBuilder.Entity<Customer>().HasData(
+                    new Faker<Customer>()
+                        .RuleFor(o => o.id, f => f.IndexVariable++)
+                        .RuleFor(o => o.title, f => f.Name.FirstName())
+                        .RuleFor(o => o.userId, f => f.Random.Number(100, 200))
+                        .RuleFor(o => o.body, f => f.Name.FirstName()).Generate());
+            }
         }
 
     }

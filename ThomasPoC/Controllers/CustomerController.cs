@@ -7,6 +7,7 @@ using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Logging;
@@ -19,11 +20,13 @@ namespace ThomasPoC.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
+        private readonly CustomerDbContext _context = null;
         private readonly ICustomerRepo _customerRepo;
         private ILogger _log = null;
 
-        public CustomerController(ICustomerRepo customerRepo, ILogger<CustomerRepo> logger, IOptions<Settings> settings)
+        public CustomerController(ICustomerRepo customerRepo, ILogger<CustomerRepo> logger, CustomerDbContext context)
         {
+            _context = context;
             _customerRepo = customerRepo;
             _log = logger;
         }
